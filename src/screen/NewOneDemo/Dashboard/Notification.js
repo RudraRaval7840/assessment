@@ -10,6 +10,8 @@ const PushNotification = () => {
       console.log('FCMTOKEN:-->> ',fcmToken);
     }
   };
+  console.log('permission:-->> ',PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+  
   useEffect(()=>{
     checkToken();
   },[])
