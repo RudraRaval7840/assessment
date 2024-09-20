@@ -16,7 +16,7 @@ import {
 } from '../../../redux/Action/FavoritesAction';
 import {useDispatch, useSelector} from 'react-redux';
 
-const Dashboard = () => {
+const HomeScreen = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -43,7 +43,6 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  
   const handleFavoriteToggle = product => {
     if (favorites.some(fav => fav.id === product.id)) {
       dispatch(removeFromFavorites(product.id));
@@ -67,7 +66,7 @@ const Dashboard = () => {
       </View>
     );
   }
-
+  
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -78,8 +77,16 @@ const Dashboard = () => {
           <Text style={styles.notificationCount}>{favorites.length}</Text>
         </TouchableOpacity>
         <Text style={styles.headerText}>Products</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('FireBaseStorage')}>
+          <Image
+            source={require('../../../assets/firebase.png')}
+            style={{height: 40, width: 40}}
+          />
+        </TouchableOpacity>
       </View>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={products}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
@@ -90,20 +97,24 @@ const Dashboard = () => {
               resizeMode="cover"
             />
             <View style={styles.productInfo}>
-              <Text style={styles.productTitle}>{item.title}</Text>
-              <Text style={styles.productPrice}>${item.price}</Text>
-              <TouchableOpacity
-                style={styles.favButton}
-                onPress={() => handleFavoriteToggle(item)}>
-                <Image
-                  source={
-                    favorites.some(fav => fav.id === item.id)
-                      ? require('../../../assets/UnFav.png')
-                      : require('../../../assets/Fav.png')
-                  }
-                  style={styles.favIcon}
-                />
-              </TouchableOpacity>
+              <View>
+                <Text style={styles.productTitle}>{item.title}</Text>
+                <Text style={styles.productPrice}>${item.price}</Text>
+              </View>
+              <View>
+                <TouchableOpacity
+                  style={styles.favButton}
+                  onPress={() => handleFavoriteToggle(item)}>
+                  <Image
+                    source={
+                      favorites.some(fav => fav.id === item.id)
+                        ? require('../../../assets/UnFav.png')
+                        : require('../../../assets/Fav.png')
+                    }
+                    style={styles.favIcon}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         )}
@@ -159,6 +170,8 @@ const styles = StyleSheet.create({
   productInfo: {
     flex: 1,
     justifyContent: 'space-between',
+    // flexDirection:'row',
+    // borderWidth:1
   },
   productTitle: {
     fontSize: 16,
@@ -166,8 +179,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   productPrice: {
-    fontSize: 14,
-    color: '#888',
+    fontSize: 17,
+    color: 'black',
     marginBottom: 10,
   },
   favButton: {
@@ -184,4 +197,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Dashboard;
+export default HomeScreen;

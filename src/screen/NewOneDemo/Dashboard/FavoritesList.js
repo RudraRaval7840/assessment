@@ -7,10 +7,10 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
-import { removeFromFavorites } from '../../../redux/Action/FavoritesAction';
+import {useNavigation} from '@react-navigation/native';
+import {removeFromFavorites} from '../../../redux/Action/FavoritesAction';
 
 const FavoritesList = () => {
   const favorites = useSelector(state => state.favorites.favoriteBooks);
@@ -21,10 +21,10 @@ const FavoritesList = () => {
     dispatch(removeFromFavorites(productId));
   };
 
-  const renderFavoriteItem = ({ item }) => (
+  const renderFavoriteItem = ({item}) => (
     <View style={styles.productCard}>
       <Image
-        source={{ uri: item.image }}
+        source={{uri: item.image}}
         style={styles.productImage}
         resizeMode="cover"
       />
@@ -33,8 +33,7 @@ const FavoritesList = () => {
         <Text style={styles.productPrice}>${item.price}</Text>
         <TouchableOpacity
           style={styles.removeButton}
-          onPress={() => handleRemove(item.id)}
-        >
+          onPress={() => handleRemove(item.id)}>
           <Ionicons name="trash-bin" size={24} color="red" />
         </TouchableOpacity>
       </View>
@@ -51,15 +50,17 @@ const FavoritesList = () => {
         </TouchableOpacity>
         <Text style={styles.headerText}>Favorites</Text>
       </View>
-      {favorites.length === 0 ? (
-        <Text style={styles.emptyText}>No favorites yet</Text>
-      ) : (
-        <FlatList
-          data={favorites}
-          keyExtractor={item => item.id.toString()}
-          renderItem={renderFavoriteItem}
-        />
-      )}
+      <View style={{marginHorizontal: 10}}>
+        {favorites.length === 0 ? (
+          <Text style={styles.emptyText}>No favorites yet</Text>
+        ) : (
+          <FlatList
+            data={favorites}
+            keyExtractor={item => item.id.toString()}
+            renderItem={renderFavoriteItem}
+          />
+        )}
+      </View>
     </View>
   );
 };
@@ -68,20 +69,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingHorizontal: 10,
-    paddingTop: 10,
+    // paddingHorizontal: 10,
+    // paddingTop: 10,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 50,
+    // height: 40,
     marginBottom: 10,
+    borderWidth: 1,
+    padding: 10,
   },
   backButton: {
     left: 10,
   },
   headerText: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'center',
     flex: 1,
@@ -94,6 +97,15 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ddd',
     borderRadius: 5,
     backgroundColor: '#f9f9f9',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   productImage: {
     width: 100,

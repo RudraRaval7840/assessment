@@ -1,45 +1,45 @@
-import {View, Text} from 'react-native';
-import React, { useEffect } from 'react';
-import AppNavigater from './AppNavigater';
-import ApiCall from './src/screen/ApiCall';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import MapIntegration from './src/screen/MapIntegration';
-import GoogleLogin from './src/screen/GoogleLogin';
-import PushNotification from './src/screen/PushNotification';
 import SplashScreen from './src/screen/NewOneDemo/SplashScreen/SplashScreen';
 import LoginScreen from './src/screen/NewOneDemo/Loginscreen/LoginScreen';
-import Dashboard from './src/screen/NewOneDemo/Dashboard/Dashboard';
-import FavoritesList from './src/screen/NewOneDemo/Dashboard/Favorites';
 import {Provider} from 'react-redux';
 import {PermissionsAndroid} from 'react-native';
-import { store } from './src/redux/Store/store';
+import {store} from './src/redux/Store/store';
 import FireBaseStorage from './src/screen/NewOneDemo/Firebase storage/FireBaseStorage';
+import SignUp from './src/screen/NewOneDemo/Loginscreen/SignUp';
+import HomeScreen from './src/screen/NewOneDemo/Dashboard/HomeScreen';
+import FavoritesList from './src/screen/NewOneDemo/Dashboard/FavoritesList';
+import ChatScreen from './src/screen/NewOneDemo/Dashboard/ChatScreen';
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 const App = () => {
-//   const checkToken = async () => {
-//     const fcmToken = await messaging().getToken();
-//     if (fcmToken) {
-//       console.log('FCMTOKEN:-->> ',fcmToken);
-//     }
-//   };
-  
-//   useEffect(()=>{
-//     checkToken();
-//   },[])
+  //   const checkToken = async () => {
+  //     const fcmToken = await messaging().getToken();
+  //     if (fcmToken) {
+  //       console.log('FCMTOKEN:-->> ',fcmToken);
+  //     }
+  //   };
 
-// checkToken();
+  //   useEffect(()=>{
+  //     checkToken();
+  //   },[])
+
+  // checkToken();
   const stack = createNativeStackNavigator();
 
   return (
     <Provider store={store}>
       <NavigationContainer>
         <stack.Navigator>
-         
           <stack.Screen
             name="SplashScreen"
             component={SplashScreen}
+            options={{headerShown: false}}
+          />
+          <stack.Screen
+            name="SignUp"
+            component={SignUp}
             options={{headerShown: false}}
           />
           <stack.Screen
@@ -48,8 +48,8 @@ const App = () => {
             options={{headerShown: false}}
           />
           <stack.Screen
-            name="Dashboard"
-            component={Dashboard}
+            name="HomeScreen"
+            component={HomeScreen}
             options={{headerShown: false}}
           />
           <stack.Screen
@@ -57,15 +57,15 @@ const App = () => {
             component={FavoritesList}
             options={{headerShown: false}}
           />
-                {/* <stack.Screen
-          name="PushNotification"
-          component={PushNotification}
-          options={{headerShown: false}}
-          /> */}
           <stack.Screen
-          name="FireBaseStorage"
-          component={FireBaseStorage}
-          options={{headerShown: false}}
+            name="FireBaseStorage"
+            component={FireBaseStorage}
+            options={{headerShown: false}}
+          />
+          <stack.Screen
+            name="ChatScreen"
+            component={ChatScreen}
+            options={{headerShown: false}}
           />
         </stack.Navigator>
       </NavigationContainer>

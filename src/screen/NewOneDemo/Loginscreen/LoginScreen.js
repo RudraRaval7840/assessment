@@ -1,25 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import {PermissionsAndroid} from 'react-native';
-  PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-  import messaging from '@react-native-firebase/messaging';
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+import messaging from '@react-native-firebase/messaging';
+import { CommonActions } from '@react-navigation/native';
 const LoginScreen = ({navigation}) => {
-
   const checkToken = async () => {
     const fcmToken = await messaging().getToken();
     if (fcmToken) {
-      console.log('FCMTOKEN:-->> ',fcmToken);
+      console.log('FCMTOKEN:-->> ', fcmToken);
     }
   };
-  useEffect(()=>{
+  useEffect(() => {
     checkToken();
-  },[])
+  }, []);
 
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert(
+        'A new FCM message arrived!',
+        JSON.stringify(remoteMessage.notification.title),
+      );
+    });
+
+    return unsubscribe;
+  });
   // checkToken();
 
-  const [email, setEmail] = useState('rudraraval5484@gmail.com');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
 
   const validate = () => {
@@ -51,7 +69,16 @@ const LoginScreen = ({navigation}) => {
       try {
         await auth().signInWithEmailAndPassword(email, password);
         Alert.alert('Login Success', 'You are now logged in!');
-        navigation.navigate('Dashboard');
+        // navigation.navigate('HomeScreen');
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 1,
+            routes: [
+              { name: 'HomeScreen' },
+             
+            ],
+          })
+        );
       } catch (error) {
         if (error.code === 'auth/user-not-found') {
           Alert.alert('Error', 'No user found with this email.');
@@ -65,59 +92,76 @@ const LoginScreen = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login Screen</Text>
+    <View style={{flex: 1}}>
+      <View
+        style={{
+          margin: 20,
+          // borderWidth: 1,
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text style={{fontSize: 25, color: 'black'}}>Login Screen</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={text => setEmail(text)}
-      />
-      {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+        <TextInput
+          style={{
+            width: '80%',
+            borderWidth: 1,
+            marginVertical: 10,
+            borderRadius: 10,
+          }}
+          placeholder="Email"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={text => setEmail(text)}
+        />
+        {errors.email && <Text style={{color: 'red'}}>{errors.email}</Text>}
 
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={text => setPassword(text)}
-      />
-      {errors.password && (
-        <Text style={styles.errorText}>{errors.password}</Text>
-      )}
+        <TextInput
+          style={{
+            width: '80%',
+            borderWidth: 1,
+            marginVertical: 10,
+            borderRadius: 10,
+          }}
+          placeholder="Password"
+          secureTextEntry
+          value={password}
+          onChangeText={text => setPassword(text)}
+        />
+        {errors.password && (
+          <Text style={{color: 'red'}}>{errors.password}</Text>
+        )}
 
-      <Button title="Login" onPress={handleLogin} />
+        <TouchableOpacity
+          onPress={() => {
+            handleLogin();
+          }}
+          style={{
+            borderWidth: 1,
+            width: '80%',
+            padding: 8,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'skyblue',
+            borderRadius: 10,
+          }}>
+          <Text style={{fontSize: 20}}>Login</Text>
+        </TouchableOpacity>
+
+        {/* <Button title="Login" onPress={handleLogin} /> */}
+
+        <View style={{flexDirection: 'row', marginTop: 20}}>
+          <Text style={{fontSize: 18}}>I don't have an account </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+            <Text style={{fontSize: 18, color: 'blue'}}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 24,
-    textAlign: 'center',
-  },
-  input: {
-    height: 40,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 12,
-    paddingHorizontal: 8,
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: 12,
-  },
-});
+const styles = StyleSheet.create({});
 
 export default LoginScreen;
